@@ -1,0 +1,82 @@
+
+=============================================
+環境構築手順
+=============================================
+1 PCローカル環境の準備作業
+
+  1-1:開発フォルダ作成
+   デスクトップに適当な名前でホルダを作成します。
+   仮にrails7_0731とします。
+   
+  1-2:雛形データを開発フォルダにcopy
+　送ったフォルダの中身の５個をコピぺする。 
+        docker-compose.yml
+        Dockerfile
+        entrypoint.sh
+        Gemfile
+        Gemfile.lock
+
+  1-3:vscode を立ち上げてrails7_0731フォルダを開く
+  
+  1-4:vscode ターミナルを開く
+  
+2 dockerを立ち上げる
+　
+    PCのヘッダーに
+
+3 Railsの新規アプリケーションを作成（プロジェクト名はrails7_0731になります）
+
+  % docker-compose run --no-deps web rails new . --force --database=postgresql
+  (見覚えのあるrailsの環境が出来上がります。)
+
+4 ビルド実行
+  docker-compose build
+
+5 database.ymlの編集（config > database.yml を編集します）
+　  default: &default
+    adapter: postgresql
+    encoding: unicode
+    pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+  ↓ 以下に変更
+
+  default: &default
+    adapter: postgresql
+    encoding: unicode
+    host: db　←　追加
+    username: pguser　←　追加
+    password: testpw0731　←　追加
+    pool: 5　←　変更
+
+6 DBの作成
+docker-compose run web rails db:create
+
+7 アプリケーションの起動
+docker-compose up
+
+8 動作確認
+http://localhost:3000/
+
+9 pgadminの動作確認
+http://localhost:8888/
+
+  login
+    Email Address / Username → test0731@gmail.com
+    Password → testpw0731
+
+  これも見たことのある画面だと思います。
+  下記を参考にdbサーバーを設定してみてください。
+  
+参考　https://programming.sincoston.com/docker-db-connect-pg/
+
+　dbサーバー設定１
+　dbサーバー設定２
+　上記、参照
+
+  Port：docker-compose.ymlで指定したdb:のportsの値（5432）
+  Maintenance database：POSTGRES_DBの値（pgdb0731）
+  Username：POSTGRES_USERの値（pguser）
+  Password：POSTGRES_PASSWORDの値（testpw0731）
+
+　参考　https://programming.sincoston.com/docker-db-connect-pg/
+

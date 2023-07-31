@@ -1,0 +1,43 @@
+version: '3'
+services:
+  web:
+    container_name: container_rails_7
+    build:
+      context: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+  db:
+    image: postgres
+    container_name: container_postgres_7
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      TZ: Asia/Tokyo
+      POSTGRES_DB: pgdb0731 #POSTGRES_DBが省略されるとDB名はPOSTGRES_USERと同じになる
+      POSTGRES_USER: pguser #ユーザアカウント
+      POSTGRES_PASSWORD: testpw0731 #ユーザアカウントのパスワード
+    volumes:
+      # - ./tmp/db:/var/lib/postgresql/data
+      - postgres_volume_7:/var/lib/postgresql/data
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: container_pgadmin_7
+    ports:
+      - "8888:80"
+    restart: always
+    volumes:
+      - pgadmin_volume_7:/var/lib/pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: 'test0731@gmail.com'
+      PGADMIN_DEFAULT_PASSWORD: 'testpw0731'
+    depends_on:
+      - db
+volumes:
+  postgres_volume_7:
+  pgadmin_volume_7:
