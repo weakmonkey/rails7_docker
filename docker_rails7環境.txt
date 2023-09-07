@@ -25,8 +25,7 @@
 
 3 Railsの新規アプリケーションを作成（プロジェクト名はrails7_0731になります）
 
-  % docker-compose run --no-deps web rails new . --force --database=postgresql
-  (見覚えのあるrailsの環境が出来上がります。)
+  % docker-compose run --no-deps web rails new . -c tailwind --force --database=postgresql
 
 4 ビルド実行
   docker-compose build
